@@ -16,5 +16,23 @@ hands = mp_hands.Hands(
 )
 
 
+gesture_name = input("Nombre del gesto: ")
+os.makedirs("data", exist_ok=True)
+filename = f"data/{gesture_name}.csv"
+
+if not os.path.isfile(filename):
+    with open(filename, "w", newline="") as f:
+        writer = csv.writer(f)
+        header = ["gesture"] + [f"{coord}{i}" for i in range(21) for coord in ("x", "y", "z")]
+        writer.writerow(header)
+
+
+cap = cv2.VideoCapture(0)
+if not cap.isOpened():
+    print("No se pudo abrir la cámara.")
+    exit()
+
+print("Presiona 's' para capturar datos, 'q' para salir.")
+
 
 
