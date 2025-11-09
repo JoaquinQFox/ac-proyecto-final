@@ -4,7 +4,7 @@ import os
 import csv
 import time
 
-mp_hands = mp.solutions
+mp_hands = mp.solutions.hands
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 
@@ -34,5 +34,40 @@ if not cap.isOpened():
 
 print("Presiona 's' para capturar datos, 'q' para salir.")
 
+while True:
+    ret, frame = cap.read()
+    if not ret:
+        print("Error leyendo el frame.")
+        break
 
+    frame   = cv2.flip(frame, 1)
+    rgb     = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    results = hands.process(rgb)
+
+    if results.multi_hand_landmarks:
+        for hand in results.multi_hand_landmarks:
+
+            mp_drawing.draw_landmarks(
+                frame,
+                hand,
+                mp_hands.HAND_CONNECTIONS,
+                mp_drawing_styles.get_default_hand_landmarks_style(),
+                mp_drawing_styles.get_default_hand_connections_style()
+            )
+            coords = [v for lm in hand.landmark for v in (lm.x, lm.y, lm.z)]
+
+            key = cv2.waitKey(1) & 0xFF
+            if key == ord('s'):
+                with open(filename, "a", newline="") as f:
+                    writer = csv.writer(f)
+                    writer.writerow([gesture_name] + coords)
+                print("Muestra capturada")
+                time.sleep(0.3)
+
+    cv2.imshow("Captura de gesto", frame)
+    if cv2.waitKey(1) & 0xFF == ord('q'):
+        break
+
+cap.release()
+cv2.destroyAllWindows()
 
