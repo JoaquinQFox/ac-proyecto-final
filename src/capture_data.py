@@ -4,6 +4,14 @@ import os
 import csv
 import time
 
+def normalizar_landmarks(landmarks):
+    base_x, base_y, base_z = landmarks[0][0], landmarks[0][1], landmarks[0][2]
+    norm = []
+    for (x, y, z) in landmarks:
+        norm.append((x - base_x, y - base_y, z - base_z))
+    return norm
+
+
 mp_hands = mp.solutions.hands
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
@@ -40,8 +48,8 @@ while True:
         print("Error leyendo el frame.")
         break
 
-    frame   = cv2.flip(frame, 1)
-    rgb     = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    frame = cv2.flip(frame, 1)
+    rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     results = hands.process(rgb)
 
     if results.multi_hand_landmarks:
@@ -54,7 +62,10 @@ while True:
                 mp_drawing_styles.get_default_hand_landmarks_style(),
                 mp_drawing_styles.get_default_hand_connections_style()
             )
-            coords = [v for lm in hand.landmark for v in (lm.x, lm.y, lm.z)]
+
+            coords_raw  = [(lm.x, lm.y, lm.z) for lm in hand.landmark]
+            coords_norm = normalizar_landmarks(coords_raw)
+            coords      = [v for point in coords_norm for v in point]
 
             key = cv2.waitKey(1) & 0xFF
             if key == ord('s'):
