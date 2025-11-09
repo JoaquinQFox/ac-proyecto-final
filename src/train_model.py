@@ -4,6 +4,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, accuracy_score
 import pandas as pd
 import glob 
+import os
+import joblib
 
 # Se leen los datos desde el csv
 path = "./data/"
@@ -13,6 +15,11 @@ dataframes = [pd.read_csv(f) for f in files]
 
 # Se juntan los datos en un arreglo
 data = pd.concat(dataframes, ignore_index=True)
+
+data["handedness"] = 0
+for i, f in enumerate(files):
+    if "derecha" in f.lower():
+        data.loc[data.index[data["gesture"] == os.path.splitext(os.path.basename(f))[0]], "handedness"] = 1
 
 x = data.drop(columns=["gesture"])
 y = data["gesture"]
@@ -33,10 +40,6 @@ print("Precisión:", accuracy_score(y_test, y_pred))
 print(classification_report(y_test, y_pred, target_names=encoder.classes_))
 
 # Exportar modelo
-import os
-import joblib
-
 os.makedirs("model", exist_ok=True)
-
 joblib.dump(model, "model/hand_gesture_model.pkl")
 joblib.dump(encoder, "model/gesture_encoder.pkl")
