@@ -39,6 +39,7 @@ class Game:
 
         self.current_block = self.next_block
         self.next_block = self.get_random_block()
+        self.grid.clear_full_rows()
 
     def block_fits(self):
         tiles = self.current_block.get_cell_positions()
