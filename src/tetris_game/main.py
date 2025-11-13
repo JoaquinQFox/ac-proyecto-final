@@ -33,8 +33,9 @@ while True:
 
         if event.type == pygame.KEYDOWN: 
             if game.game_over == True:
-                game.game_over = False
-                game.reset()
+                if event.key == pygame.K_SPACE:
+                    game.game_over = False
+                    game.reset()
 
             if event.key == pygame.K_a and game.game_over == False:
                 game.move_left()
