@@ -2,8 +2,8 @@ import pygame, sys
 from game import Game
 from colors import Colors
 
-SCREEN_WIDTH = 300
-SCREEN_HEIGHT = 600
+SCREEN_WIDTH = 500
+SCREEN_HEIGHT = 1000
 
 pygame.init()
 
@@ -47,8 +47,8 @@ while True:
             if event.key == pygame.K_w and game.game_over == False:
                 game.rotate()
 
-        if event.type == GAME_UPDATE and game.game_over == False:
-            game.move_down()
+        # if event.type == GAME_UPDATE and game.game_over == False:
+            # game.move_down()
 
     # DRAWING
     # score_value_surface = title_font.render(str(game.score), True, Colors.white)
