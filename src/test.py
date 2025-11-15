@@ -13,12 +13,13 @@ def normalizar_landmarks(landmarks):
 
 model = joblib.load("model/hand_gesture_model.pkl")
 encoder = joblib.load("model/gesture_encoder.pkl")
+scaler = joblib.load("model/hand_scaler.pkl")
 
 mp_hands = mp.solutions.hands
 mp_drawing = mp.solutions.drawing_utils
 mp_drawing_styles = mp.solutions.drawing_styles
 
-UMBRAL_PROB = 0.8
+UMBRAL_PROB = 0.6
 FRAMES_ESTABLES = 6
 
 # Estabilidad por mano
@@ -68,7 +69,9 @@ with mp_hands.Hands(
                 mano_label = "Left" if mano_label == "Right" else "Right"
                 x["handedness"] = 1 if mano_label == "Right" else 0
 
-                probs = model.predict_proba(x)[0]
+                x_scaled = scaler.transform(x)
+
+                probs = model.predict_proba(x_scaled)[0]
                 max_prob = np.max(probs)
                 gesture_index = np.argmax(probs)
 
