@@ -22,6 +22,8 @@ pygame.display.set_caption("Tetris")
 clock = pygame.time.Clock()
 
 cap = cv2.VideoCapture(0)
+cv2.namedWindow("Captura de mano", cv2.WINDOW_NORMAL)
+cv2.resizeWindow("Captura de mano", 300, 300)        
 
 game = Game()
 
@@ -71,7 +73,7 @@ while True:
 
             if ret:
                 flipped = cv2.flip(frame, 1)
-                cv2.imshow("Camara", flipped)
+                cv2.imshow("Captura de mano", flipped)
                 cv2.waitKey(1)
 
                 now = pygame.time.get_ticks()
@@ -80,16 +82,16 @@ while True:
 
                     print(gesture)
 
-                    if gesture == "palma_izquierda" and game.game_over == False:
-                        game.move_left()
-                    elif gesture == "palma_derecha" and game.game_over == False:
-                        game.move_right()
+                    # if gesture == "palma_izquierda" and game.game_over == False:
+                    #     game.move_left()
+                    # elif gesture == "palma_derecha" and game.game_over == False:
+                    #     game.move_right()
 
-                    elif ((gesture == "cerrar_izquierda" or gesture == "cerrar_derecha") 
-                          and now - last_pushdown_time > PUSHDOWN_COOLDONW 
-                          and game.game_over == False):
-                        game.push_down()
-                        last_pushdown_time = now
+                    # elif ((gesture == "cerrar_izquierda" or gesture == "cerrar_derecha") 
+                    #       and now - last_pushdown_time > PUSHDOWN_COOLDONW 
+                    #       and game.game_over == False):
+                    #     game.push_down()
+                    #     last_pushdown_time = now
 
                     last_gesture_time = now
 
