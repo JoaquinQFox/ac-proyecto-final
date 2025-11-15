@@ -43,6 +43,34 @@ GESTURE_COOLDOWN = 600
 last_pushdown_time = 0
 PUSHDOWN_COOLDONW = 1000
 
+
+def gesture_input(gesture):
+    if game.game_over == True:
+        return
+
+    now = pygame.time.get_ticks()
+    if (now - last_gesture_time < GESTURE_COOLDOWN
+        and gesture["Left"] == "Sin gesto" 
+        and gesture["Right"] == "Sin gesto"):
+        return
+    
+    if not gesture["Left"] == "Sin gesto":
+        if gesture["Left"] == "cerrar_izquierda":
+            game.move_left()
+        elif gesture["Left"] == "inclinar_izquierda":
+            game.rotate_left()
+
+    if not gesture["Right"] == "Sin gesto":
+        if gesture["Right"] == "cerrar_derecha":
+            game.move_right()
+        elif gesture["Right"] == "inclinar_derecha":
+            game.rotate_right()
+
+    if (now - last_pushdown_time > PUSHDOWN_COOLDONW
+        and gesture["Left"] == "cerrar_izquierda" 
+        and gesture["Right"] == "cerrar_derecha"):
+        game.push_down()
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -62,8 +90,10 @@ while True:
             if event.key == pygame.K_s and game.game_over == False:
                 game.move_down()
                 game.update_score(0, 1)
-            if event.key == pygame.K_w and game.game_over == False:
-                game.rotate()
+            if event.key == pygame.K_q and game.game_over == False:
+                game.rotate_left()
+            if event.key == pygame.K_e and game.game_over == False:
+                game.rotate_right()
 
         if event.type == GAME_UPDATE and game.game_over == False:
             game.move_down()
@@ -76,11 +106,8 @@ while True:
                 cv2.imshow("Captura de mano", flipped)
                 cv2.waitKey(1)
 
-                now = pygame.time.get_ticks()
-                if now - last_gesture_time > GESTURE_COOLDOWN:
-                    gesture = read_gesture(frame)
-
-                    print(gesture)
+                gesture = read_gesture(frame)
+                gesture_input(gesture)
 
                     # if gesture == "palma_izquierda" and game.game_over == False:
                     #     game.move_left()
@@ -93,7 +120,6 @@ while True:
                     #     game.push_down()
                     #     last_pushdown_time = now
 
-                    last_gesture_time = now
 
     # DRAWING
     # score_value_surface = title_font.render(str(game.score), True, Colors.white)

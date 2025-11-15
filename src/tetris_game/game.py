@@ -111,3 +111,4 @@ class Game:
         #     self.next_block.draw(screen, 255, 280)
         # else:
         #     self.next_block.draw(screen, 270, 270)
+
