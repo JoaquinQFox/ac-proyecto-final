@@ -28,7 +28,10 @@ game = Game()
 GAME_UPDATE = pygame.USEREVENT
 pygame.time.set_timer(GAME_UPDATE, 200)
 HANDS_UPDATE = pygame.USEREVENT
-pygame.time.set_timer(HANDS_UPDATE, 400)
+pygame.time.set_timer(HANDS_UPDATE, 100)
+
+last_gesture_time = 0
+GESTURE_COOLDOWN = 800
 
 while True:
     for event in pygame.event.get():
@@ -59,13 +62,24 @@ while True:
             ret, frame = cap.read()
 
             if ret:
-                gesture = read_gesture(frame)
-                print(gesture)
+                flipped = cv2.flip(frame, 1)
+                cv2.imshow("Camara", flipped)
+                cv2.waitKey(1)
 
-                if gesture == "palma_izquierda":
-                    game.move_left()
-                elif gesture == "palma_derecha":
-                    game.move_right()
+                now = pygame.time.get_ticks()
+                if now - last_gesture_time > GESTURE_COOLDOWN:
+                    gesture = read_gesture(frame)
+
+                    print(gesture)
+
+                    if gesture == "palma_izquierda":
+                        game.move_left()
+                    elif gesture == "palma_derecha":
+                        game.move_right()
+                    elif gesture == "cerrar_izquierda" or gesture == "cerrar_derecha":
+                        game.move_down()
+                
+                    last_gesture_time = now
 
     # DRAWING
     # score_value_surface = title_font.render(str(game.score), True, Colors.white)
