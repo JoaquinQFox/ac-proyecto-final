@@ -40,12 +40,19 @@ class Game:
             self.current_block.move(0, -1)
 
     def move_down(self):
+        self.current_block.move(1, 0)
+        if (self.block_inside() == False or self.block_fits() == False):
+            self.current_block.move(-1, 0)
+            self.lock_block()
+            
+            return False
+
+        return True
+
+    def push_down(self):
         while True:
-            self.current_block.move(1, 0)
-            if (self.block_inside() == False or self.block_fits() == False):
-                self.current_block.move(-1, 0)
+            if not self.move_down():
                 break
-        self.lock_block()
 
     def lock_block(self):
         tiles = self.current_block.get_cell_positions()

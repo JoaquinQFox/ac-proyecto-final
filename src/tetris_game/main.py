@@ -25,13 +25,21 @@ cap = cv2.VideoCapture(0)
 
 game = Game()
 
-GAME_UPDATE = pygame.USEREVENT
-pygame.time.set_timer(GAME_UPDATE, 200)
-HANDS_UPDATE = pygame.USEREVENT
+# Tiempo en el que demora bajar un bloque automaticamente
+GAME_UPDATE = pygame.USEREVENT + 1
+pygame.time.set_timer(GAME_UPDATE, 2000)
+
+# Tiempo en el que lee cada gesto
+HANDS_UPDATE = pygame.USEREVENT + 2
 pygame.time.set_timer(HANDS_UPDATE, 100)
 
+# Cooldown para lectura de gesto
 last_gesture_time = 0
-GESTURE_COOLDOWN = 800
+GESTURE_COOLDOWN = 600
+
+# Cooldown para hacer accion de pushdown (mover abajo defrente)
+last_pushdown_time = 0
+PUSHDOWN_COOLDONW = 1000
 
 while True:
     for event in pygame.event.get():
@@ -55,8 +63,8 @@ while True:
             if event.key == pygame.K_w and game.game_over == False:
                 game.rotate()
 
-        # if event.type == GAME_UPDATE and game.game_over == False:
-        #     game.move_down()
+        if event.type == GAME_UPDATE and game.game_over == False:
+            game.move_down()
 
         if event.type == HANDS_UPDATE:
             ret, frame = cap.read()
@@ -72,13 +80,17 @@ while True:
 
                     print(gesture)
 
-                    if gesture == "palma_izquierda":
+                    if gesture == "palma_izquierda" and game.game_over == False:
                         game.move_left()
-                    elif gesture == "palma_derecha":
+                    elif gesture == "palma_derecha" and game.game_over == False:
                         game.move_right()
-                    elif gesture == "cerrar_izquierda" or gesture == "cerrar_derecha":
-                        game.move_down()
-                
+
+                    elif ((gesture == "cerrar_izquierda" or gesture == "cerrar_derecha") 
+                          and now - last_pushdown_time > PUSHDOWN_COOLDONW 
+                          and game.game_over == False):
+                        game.push_down()
+                        last_pushdown_time = now
+
                     last_gesture_time = now
 
     # DRAWING
