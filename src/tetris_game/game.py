@@ -84,11 +84,11 @@ class Game:
         return True
 
     def draw(self, screen):
-        self.grid.draw(screen)
-        self.current_block.draw(screen, 11, 11)
-        if self.next_block.id == 3:
-            self.next_block.draw(screen, 255, 290)
-        elif self.next_block.id == 4:
-            self.next_block.draw(screen, 255, 280)
-        else:
-            self.next_block.draw(screen, 270, 270)
+        self.grid.draw(screen, 0, 0)
+        self.current_block.draw(screen, 0, 0)
+        # if self.next_block.id == 3:
+        #     self.next_block.draw(screen, 255, 290)
+        # elif self.next_block.id == 4:
+        #     self.next_block.draw(screen, 255, 280)
+        # else:
+        #     self.next_block.draw(screen, 270, 270)
