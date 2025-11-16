@@ -43,33 +43,45 @@ GESTURE_COOLDOWN = 600
 last_pushdown_time = 0
 PUSHDOWN_COOLDONW = 1000
 
+last_rotation_time = 0
+ROTATION_COOLDOWN = 700
 
-def gesture_input(gesture):
+
+def gesture_input(frame):
+    global last_gesture_time
+    global last_pushdown_time
+    global last_rotation_time
+
+    now = pygame.time.get_ticks()
+
     if game.game_over == True:
         return
 
-    now = pygame.time.get_ticks()
-    if (now - last_gesture_time < GESTURE_COOLDOWN
-        and gesture["Left"] == "Sin gesto" 
-        and gesture["Right"] == "Sin gesto"):
+    if now - last_gesture_time < GESTURE_COOLDOWN:
         return
-    
-    if not gesture["Left"] == "Sin gesto":
-        if gesture["Left"] == "cerrar_izquierda":
-            game.move_left()
-        elif gesture["Left"] == "inclinar_izquierda":
-            game.rotate_left()
 
-    if not gesture["Right"] == "Sin gesto":
-        if gesture["Right"] == "cerrar_derecha":
-            game.move_right()
-        elif gesture["Right"] == "inclinar_derecha":
-            game.rotate_right()
+    gesture = read_gesture(frame)
+    print(gesture)
 
     if (now - last_pushdown_time > PUSHDOWN_COOLDONW
         and gesture["Left"] == "cerrar_izquierda" 
         and gesture["Right"] == "cerrar_derecha"):
         game.push_down()
+        last_pushdown_time = now
+    
+    if gesture["Left"] == "cerrar_izquierda":
+        game.move_left()
+    if gesture["Right"] == "cerrar_derecha":
+        game.move_right()
+
+    if now - last_rotation_time > ROTATION_COOLDOWN:
+        if gesture["Left"] == "inclinar_izquierda":
+            game.rotate_left()
+        if gesture["Right"] == "inclinar_derecha":
+            game.rotate_right()
+        last_rotation_time = now
+    
+    last_gesture_time = now
 
 while True:
     for event in pygame.event.get():
@@ -105,9 +117,7 @@ while True:
                 flipped = cv2.flip(frame, 1)
                 cv2.imshow("Captura de mano", flipped)
                 cv2.waitKey(1)
-
-                gesture = read_gesture(frame)
-                gesture_input(gesture)
+                gesture_input(frame)
 
                     # if gesture == "palma_izquierda" and game.game_over == False:
                     #     game.move_left()
