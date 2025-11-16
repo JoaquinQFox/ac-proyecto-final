@@ -60,8 +60,13 @@ def gesture_input(frame):
     if now - last_gesture_time < GESTURE_COOLDOWN:
         return
 
+    last_gesture_time = now
+
     gesture = read_gesture(frame)
     print(gesture)
+
+    if (gesture["Left"] == "Sin gesto" or gesture["Right"] == "Sin gesto"):
+        return
 
     if (now - last_pushdown_time > PUSHDOWN_COOLDONW
         and gesture["Left"] == "cerrar_izquierda" 
@@ -81,7 +86,6 @@ def gesture_input(frame):
             game.rotate_right()
         last_rotation_time = now
     
-    last_gesture_time = now
 
 while True:
     for event in pygame.event.get():

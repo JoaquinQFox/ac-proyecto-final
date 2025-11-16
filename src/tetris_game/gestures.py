@@ -16,7 +16,7 @@ hands = mp_hands.Hands(
     max_num_hands=2
 )
 
-UMBRAL_PROB = 0.8
+UMBRAL_PROB = 0.6
 
 def normalizar_landmarks(landmarks):
     base_x, base_y, base_z = landmarks[0][0], landmarks[0][1], landmarks[0][2]
