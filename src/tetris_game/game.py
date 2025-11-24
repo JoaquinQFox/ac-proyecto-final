@@ -4,17 +4,26 @@ import random, pygame
 
 class Game:
     def __init__(self):
+        pygame.mixer.init(frequency=44100, size=-16, channels=2)
+
         self.grid = Grid()
         self.blocks = [IBlock(), JBlock(), LBlock(), OBlock(), SBlock(), TBlock(), ZBlock()]
         self.current_block = self.get_random_block()
         self.next_block = self.get_random_block()
         self.game_over = False
         self.score = 0
+
         self.rotate_sound = pygame.mixer.Sound("src/tetris_game/Sounds/rotate.ogg")
+        self.rotate_sound.set_volume(0.1)
+
         self.clear_souond = pygame.mixer.Sound("src/tetris_game/Sounds/clear.ogg")
+        self.clear_souond.set_volume(0.08)
+
 
         pygame.mixer.music.load("src/tetris_game/Sounds/music.ogg")
         pygame.mixer.music.play(-1)
+        pygame.mixer.music.set_volume(0.03)
+        pygame.mixer.Channel(0).set_volume(1.0, 1.0)
 
     def update_score(self, lines_cleared, move_down_points):
         if lines_cleared == 1:
