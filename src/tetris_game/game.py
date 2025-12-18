@@ -16,9 +16,11 @@ class Game:
         self.rotate_sound = pygame.mixer.Sound("src/tetris_game/Sounds/rotate.ogg")
         self.rotate_sound.set_volume(0.7)
 
-        self.clear_souond = pygame.mixer.Sound("src/tetris_game/Sounds/clear.ogg")
-        self.clear_souond.set_volume(0.7)
+        self.clear_sound = pygame.mixer.Sound("src/tetris_game/Sounds/clear.ogg")
+        self.clear_sound.set_volume(0.7)
 
+        self.game_over_sound = pygame.mixer.Sound("src/tetris_game/Sounds/game_over.ogg")
+        self.game_over_sound.set_volume(0.15)
 
         pygame.mixer.music.load("src/tetris_game/Sounds/music.ogg")
         pygame.mixer.music.play(-1)
@@ -78,10 +80,12 @@ class Game:
         rows_cleared = self.grid.clear_full_rows()
 
         if rows_cleared > 0:
-            self.clear_souond.play()
+            self.clear_sound.play()
             self.update_score(rows_cleared, 0)
         if self.block_fits() == False:
             self.game_over = True
+            self.game_over_sound.play()
+            pygame.mixer.music.stop()
 
     def reset(self):
         self.grid.reset()
@@ -89,6 +93,7 @@ class Game:
         self.current_block = self.get_random_block()
         self.next_block = self.get_random_block()
         self.score = 0
+        pygame.mixer.music.play(-1)
 
     def block_fits(self):
         tiles = self.current_block.get_cell_positions()
