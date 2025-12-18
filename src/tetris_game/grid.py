@@ -3,8 +3,8 @@ from colors import Colors
 
 class Grid:
     def __init__(self):
-        self.num_rows = 20
-        self.num_cols = 10
+        self.num_rows = 10
+        self.num_cols = 8
         self.cell_size = 40
         self.grid = [[0 for j in range(self.num_cols)] for i in range(self.num_rows)]
         self.colors = Colors.get_cell_colors()
@@ -21,9 +21,13 @@ class Grid:
         return False
 
     def is_empty(self, row, col):
-        if self.grid[row][col] == 0:
-            return True
-        return False
+        if row < 0 or row >= self.num_rows:
+            return False
+
+        if col < 0 or col >= self.num_cols:
+            return False
+
+        return self.grid[row][col] == 0
 
     def is_row_full(self, row):
         for col in range(self.num_cols):
