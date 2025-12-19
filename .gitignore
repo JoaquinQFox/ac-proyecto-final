@@ -43,3 +43,6 @@ htmlcov/
 .coverage.*
 .cache
 nosetest
+
+# VS Code
+.vscode/

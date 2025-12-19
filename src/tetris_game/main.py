@@ -8,18 +8,24 @@ SCREEN_HEIGHT = 860
 
 pygame.init()
 
+# Se definen fuentes
 title_font = pygame.font.Font(None, 40)
-score_surface = title_font.render("Score", True, Colors.white)
+text_font = pygame.font.Font(None, 30)
+
+score_surface = title_font.render("Manos", True, Colors.white)
 next_surface = title_font.render("Next", True, Colors.white)
 game_over_surface = title_font.render("GAME OVER", True, Colors.white)
 
-score_rect = pygame.Rect(495, 85, 170, 60)
+score_rect = pygame.Rect(480, 85, 200, 80)
 next_rect = pygame.Rect(495, 245, 170, 180)
 
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Tetris")
 
 clock = pygame.time.Clock()
+
+estado_mano_izq = "Nada"
+estado_mano_der = "Nada"
 
 cap = cv2.VideoCapture(0)
 cv2.namedWindow("Captura de mano", cv2.WINDOW_NORMAL)
@@ -46,11 +52,37 @@ PUSHDOWN_COOLDONW = 1000
 last_rotation_time = 0
 ROTATION_COOLDOWN = 700
 
+def update_hands_state(gesture):
+    global estado_mano_izq, estado_mano_der
+
+    izq_estado = gesture["Left"]
+    der_estado = gesture["Right"]
+
+    if izq_estado == "Sin gesto":
+        estado_mano_izq = "Nada"
+    elif izq_estado == "palma_izquierda":
+        estado_mano_izq = "Abierta"
+    elif izq_estado == "cerrar_izquierda":
+        estado_mano_izq = "Cerrada"
+    else:
+        estado_mano_izq = "Inclinada"
+
+    if der_estado == "Sin gesto":
+        estado_mano_der = "Nada"
+    elif der_estado == "palma_derecha":
+        estado_mano_der = "Abierta"
+    elif der_estado == "cerrar_derecha":
+        estado_mano_der = "Cerrada"
+    else:
+        estado_mano_der = "Inclinada"
+
 
 def gesture_input(frame):
     global last_gesture_time
     global last_pushdown_time
     global last_rotation_time
+
+    global estado_mano_izq, estado_mano_der
 
     now = pygame.time.get_ticks()
 
@@ -63,7 +95,8 @@ def gesture_input(frame):
     last_gesture_time = now
 
     gesture = read_gesture(frame)
-    print(gesture)
+
+    update_hands_state(gesture)
 
     if (gesture["Left"] == "Sin gesto" or gesture["Right"] == "Sin gesto"):
         return
@@ -129,7 +162,8 @@ while True:
 
     row_offset = 30
     # DRAWING
-    score_value_surface = title_font.render(str(game.score), True, Colors.white)
+    left_hand_surface = text_font.render(f"IZQ: {estado_mano_izq}", True, Colors.white)
+    right_hand_surface = text_font.render(f"DER: {estado_mano_der}", True, Colors.white)
 
     screen.fill(Colors.dark_blue)
 
@@ -141,8 +175,8 @@ while True:
 
     # Mostrar cuadro de puntaje
     pygame.draw.rect(screen, Colors.light_blue, score_rect, 0, 10)
-    screen.blit(score_value_surface, score_value_surface.get_rect(centerx= score_rect.centerx,
-                                                                  centery= score_rect.centery))
+    screen.blit(left_hand_surface, (500, 100))
+    screen.blit(right_hand_surface, (500, 140))
 
     pygame.draw.rect(screen, Colors.light_blue, next_rect, 0, 10)
     game.draw(screen)
