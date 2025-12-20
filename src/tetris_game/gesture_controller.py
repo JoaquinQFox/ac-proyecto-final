@@ -18,9 +18,10 @@ class GestureController:
         self.estado_mano_der = "Nada"
 
         # Contadores de veces que se cierra y abre manos
-        self.contador_cerrar_izq = 0
-        self.contador_cerrar_der = 0
+        self.contador_cerrar_manos = 0
+        self.contador_inclinar_manos = 0
 
+        # Contador para saber cual es el ultimo gesto realizado
         self.ultimo_gesto_izq = "Nada"
         self.ultimo_gesto_der = "Nada"
 
@@ -46,6 +47,26 @@ class GestureController:
         else:
             self.estado_mano_der = "Inclinada"
 
+    def update_last_gests(self):
+        if self.estado_mano_izq != "Nada":
+            self.ultimo_gesto_izq = self.estado_mano_izq
+            
+        if self.estado_mano_der != "Nada":
+            self.ultimo_gesto_der = self.estado_mano_der
+
+    def update_counters(self):
+        if self.estado_mano_izq == "Cerrada" and not self.ultimo_gesto_izq == "Cerrada":
+            self.contador_cerrar_manos += 1
+
+        if self.estado_mano_der == "Cerrada" and not self.ultimo_gesto_der == "Cerrada":
+            self.contador_cerrar_manos += 1
+
+        if self.estado_mano_izq == "Inclinada" and not self.ultimo_gesto_izq == "Inclinada":
+            self.contador_inclinar_manos += 1
+
+        if self.estado_mano_der == "Inclinada" and not self.ultimo_gesto_der == "Inclinada":
+            self.contador_inclinar_manos += 1
+
     def gesture_input(self, frame):
         if self.game.game_over:
             return
@@ -58,6 +79,8 @@ class GestureController:
         gesture = read_gesture(frame)
 
         self.update_hands_state(gesture)
+        self.update_counters()
+        self.update_last_gests()
 
         if "Sin gesto" in gesture.values():
             return

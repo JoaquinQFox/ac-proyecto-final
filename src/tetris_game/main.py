@@ -88,8 +88,8 @@ def draw():
 
     screen.blit(counter_title_surface, counter_title_rect)
 
-    close_counter_surface = text_font.render(f"Puños: {0}", True, Colors.white)
-    incline_counter_surface = text_font.render(f"Inclinaciones: {0}", True, Colors.white)
+    close_counter_surface = text_font.render(f"Puños: {gesture_controller.contador_cerrar_manos}", True, Colors.white)
+    incline_counter_surface = text_font.render(f"Inclinaciones: {gesture_controller.contador_inclinar_manos}", True, Colors.white)
     screen.blit(close_counter_surface, (108, 500))
     screen.blit(incline_counter_surface, (108, 550))
 
