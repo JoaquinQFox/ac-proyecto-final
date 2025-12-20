@@ -8,8 +8,8 @@ from gesture_controller import GestureController
 if sys.platform == "win32":
     os.environ["SDL_VIDEO_HIGHDPI_DISABLED"] = "1"
 
-SCREEN_WIDTH = 730
-SCREEN_HEIGHT = 860
+SCREEN_WIDTH = 480
+SCREEN_HEIGHT = 880
 
 pygame.init()
 

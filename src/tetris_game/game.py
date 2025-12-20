@@ -129,8 +129,8 @@ class Game:
         return True
 
     def draw(self, screen):
-        self.grid.draw(screen, 30, 30)
-        self.current_block.draw(screen, 30, 30)
+        self.grid.draw(screen, 40, 40)
+        self.current_block.draw(screen, 40, 40)
         if self.next_block.id == 3:
             self.next_block.draw(screen, 380, 320)
         elif self.next_block.id == 4:
