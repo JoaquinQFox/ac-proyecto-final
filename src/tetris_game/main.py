@@ -1,8 +1,12 @@
-import pygame, sys, cv2
+import pygame, sys, os, cv2
 from game import Game
 from colors import Colors
 from gestures import read_gesture
 from gesture_controller import GestureController
+
+# Se desactiva escalado DPI en windows
+if sys.platform == "win32":
+    os.environ["SDL_VIDEO_HIGHDPI_DISABLED"] = "1"
 
 SCREEN_WIDTH = 730
 SCREEN_HEIGHT = 860
