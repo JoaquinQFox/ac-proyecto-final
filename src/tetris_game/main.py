@@ -38,6 +38,8 @@ counter_title_rect = counter_title_surface.get_rect(centerx=counter_actions_rect
 
 next_rect = pygame.Rect(900, 175, 320, 280)
 next_title_rect = next_surface.get_rect(centerx=next_rect.centerx, y=127)
+game_over_rect = game_over_surface.get_rect(centerx=next_rect.centerx, y=548)
+play_game_rect = play_game_surface.get_rect(centerx=next_rect.centerx, y=600)
 
 # Se crea pantalla de juego
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -92,18 +94,17 @@ def draw():
     screen.blit(incline_counter_surface, (108, 550))
 
     # Sección de siguiente bloque
-
     pygame.draw.rect(screen, Colors.light_blue, next_rect, 0, 15)
     screen.blit(next_surface, next_title_rect)
 
+    # Mensaje de game over
     if game.game_over:
-        screen.blit(game_over_surface, (500, 500, 50, 50))
+        screen.blit(game_over_surface, game_over_rect)
 
+    # Mensaje de jugar juego
+    if game.play_game:
+        screen.blit(play_game_surface, play_game_rect)
 
-    # Mostrar cuadro de puntaje
-    # pygame.draw.rect(screen, Colors.light_blue, score_rect, 0, 10)
-
-    # pygame.draw.rect(screen, Colors.light_blue, next_rect, 0, 10)
     game.draw(screen)
 
     pygame.display.update()
@@ -119,9 +120,10 @@ while True:
             sys.exit()
 
         if event.type == pygame.KEYDOWN: 
-            if game.game_over == True:
+            if game.game_over == True or game.play_game == True:
                 if event.key == pygame.K_SPACE:
                     game.game_over = False
+                    game.play_game = False
                     game.reset()
 
             if event.key == pygame.K_a and game.game_over == False:
@@ -137,7 +139,7 @@ while True:
             if event.key == pygame.K_e and game.game_over == False:
                 game.rotate_right()
 
-        if event.type == GAME_UPDATE and game.game_over == False:
+        if event.type == GAME_UPDATE and game.game_over == False and game.play_game == False:
             game.move_down()
 
         if event.type == HANDS_UPDATE:

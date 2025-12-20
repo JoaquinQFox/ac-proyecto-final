@@ -28,7 +28,6 @@ class GestureController:
         izq_estado = gesture["Left"]
         der_estado = gesture["Right"]
 
-        print(izq_estado)
         if izq_estado == "Sin gesto":
             self.estado_mano_izq = "Nada"
         elif izq_estado == "palma_izquierda":

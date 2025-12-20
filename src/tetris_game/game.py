@@ -11,6 +11,7 @@ class Game:
         self.current_block = self.get_random_block()
         self.next_block = self.get_random_block()
         self.game_over = False
+        self.play_game = True
         self.score = 0
 
         self.rotate_sound = pygame.mixer.Sound("src/tetris_game/Sounds/rotate.ogg")
@@ -23,7 +24,6 @@ class Game:
         self.game_over_sound.set_volume(0.15)
 
         pygame.mixer.music.load("src/tetris_game/Sounds/music.ogg")
-        pygame.mixer.music.play(-1)
         pygame.mixer.music.set_volume(0.5)
         pygame.mixer.Channel(0).set_volume(1.0, 1.0)
 
@@ -84,6 +84,8 @@ class Game:
             self.update_score(rows_cleared, 0)
         if self.block_fits() == False:
             self.game_over = True
+            self.play_game = True
+
             self.game_over_sound.play()
             pygame.mixer.music.stop()
 
@@ -130,11 +132,13 @@ class Game:
 
     def draw(self, screen):
         self.grid.draw(screen, 440, 40)
-        self.current_block.draw(screen, 440, 40)
 
-        if self.next_block.id == 4:     # Bloque O
-            self.next_block.draw_next(screen, 983, 235)
-        elif self.next_block.id == 3:   # Bloque I
-            self.next_block.draw_next(screen, 941, 194)
-        else:
-            self.next_block.draw_next(screen, 941, 235)
+        if self.play_game == False:
+            self.current_block.draw(screen, 440, 40)
+
+            if self.next_block.id == 4:     # Bloque O
+                self.next_block.draw_next(screen, 983, 235)
+            elif self.next_block.id == 3:   # Bloque I
+                self.next_block.draw_next(screen, 941, 194)
+            else:
+                self.next_block.draw_next(screen, 941, 235)
