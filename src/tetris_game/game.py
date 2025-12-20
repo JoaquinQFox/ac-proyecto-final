@@ -131,10 +131,10 @@ class Game:
     def draw(self, screen):
         self.grid.draw(screen, 440, 40)
         self.current_block.draw(screen, 440, 40)
-        # if self.next_block.id == 3:
-        #     self.next_block.draw(screen, 380, 320)
-        # elif self.next_block.id == 4:
-        #     self.next_block.draw(screen, 380, 290)
-        # else:
-        #     self.next_block.draw(screen, 405, 300)
 
+        if self.next_block.id == 4:     # Bloque O
+            self.next_block.draw_next(screen, 983, 235)
+        elif self.next_block.id == 3:   # Bloque I
+            self.next_block.draw_next(screen, 941, 194)
+        else:
+            self.next_block.draw_next(screen, 941, 235)

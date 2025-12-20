@@ -43,3 +43,11 @@ class Block:
                                     self.cell_size - 1, self.cell_size - 1)
             pygame.draw.rect(screen, self.colors[self.id], tile_rect)
 
+    def draw_next(self, screen, x, y):
+        tiles = self.cells[self.rotation_state]
+
+        for tile in tiles:
+            tile_rect = pygame.Rect(x + tile.col * self.cell_size,
+                                    y + tile.row * self.cell_size,
+                                    self.cell_size - 1, self.cell_size - 1)
+            pygame.draw.rect(screen, self.colors[self.id], tile_rect)

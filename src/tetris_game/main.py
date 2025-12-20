@@ -18,12 +18,13 @@ title_font = pygame.font.Font(None, 40)
 text_font = pygame.font.Font(None, 35)
 
 # Se definen textos
-score_surface = title_font.render("Manos", True, Colors.white)
-next_surface = title_font.render("Next", True, Colors.white)
-game_over_surface = title_font.render("GAME OVER", True, Colors.white)
 inf_title_surface = title_font.render("Información Manos", True, Colors.white)
 hands_title_surface = title_font.render("Manos", True, Colors.white)
 counter_title_surface = title_font.render("Acciones", True, Colors.white)
+
+next_surface = title_font.render("Siguiente", True, Colors.white)
+game_over_surface = title_font.render("GAME OVER", True, Colors.white)
+play_game_surface = title_font.render('Apreta "espacio" para jugar', True, Colors.white)
 
 # Se definen rectangulos
 inf_title_rect = pygame.Rect(50, 115, 340, 60)
@@ -35,6 +36,10 @@ hands_title_rect = hands_title_surface.get_rect(centerx=hands_action_rect.center
 counter_actions_rect = pygame.Rect(82, 482, 280, 120)
 counter_title_rect = counter_title_surface.get_rect(centerx=counter_actions_rect.centerx, y=440)
 
+next_rect = pygame.Rect(900, 175, 320, 280)
+next_title_rect = next_surface.get_rect(centerx=next_rect.centerx, y=127)
+
+# Se crea pantalla de juego
 screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
 pygame.display.set_caption("Tetris")
 
@@ -86,7 +91,10 @@ def draw():
     screen.blit(close_counter_surface, (108, 500))
     screen.blit(incline_counter_surface, (108, 550))
 
+    # Sección de siguiente bloque
 
+    pygame.draw.rect(screen, Colors.light_blue, next_rect, 0, 15)
+    screen.blit(next_surface, next_title_rect)
 
     if game.game_over:
         screen.blit(game_over_surface, (500, 500, 50, 50))
