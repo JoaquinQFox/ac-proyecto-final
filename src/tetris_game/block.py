@@ -6,7 +6,7 @@ class Block:
     def __init__(self, id):
         self.id = id
         self.cells = {}
-        self.cell_size = 40
+        self.cell_size = 80
         self.row_offset = 0
         self.col_offset = 0
         self.rotation_state = 0
@@ -42,3 +42,4 @@ class Block:
                                     offset_y + tile.row * self.cell_size,
                                     self.cell_size - 1, self.cell_size - 1)
             pygame.draw.rect(screen, self.colors[self.id], tile_rect)
+
