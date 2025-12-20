@@ -100,9 +100,10 @@ def draw():
     # Mensaje de game over
     if game.game_over:
         screen.blit(game_over_surface, game_over_rect)
+        screen.blit(play_game_surface, play_game_rect)
 
     # Mensaje de jugar juego
-    if game.play_game:
+    if game.new_game:
         screen.blit(play_game_surface, play_game_rect)
 
     game.draw(screen)
@@ -120,10 +121,10 @@ while True:
             sys.exit()
 
         if event.type == pygame.KEYDOWN: 
-            if game.game_over == True or game.play_game == True:
+            if game.game_over == True or game.new_game == True:
                 if event.key == pygame.K_SPACE:
                     game.game_over = False
-                    game.play_game = False
+                    game.new_game = False
                     game.reset()
 
             if event.key == pygame.K_a and game.game_over == False:
@@ -139,7 +140,7 @@ while True:
             if event.key == pygame.K_e and game.game_over == False:
                 game.rotate_right()
 
-        if event.type == GAME_UPDATE and game.game_over == False and game.play_game == False:
+        if event.type == GAME_UPDATE and game.game_over == False and game.new_game == False:
             game.move_down()
 
         if event.type == HANDS_UPDATE:
