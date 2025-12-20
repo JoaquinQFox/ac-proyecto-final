@@ -28,6 +28,7 @@ class GestureController:
         izq_estado = gesture["Left"]
         der_estado = gesture["Right"]
 
+        print(izq_estado)
         if izq_estado == "Sin gesto":
             self.estado_mano_izq = "Nada"
         elif izq_estado == "palma_izquierda":
@@ -35,7 +36,7 @@ class GestureController:
         elif izq_estado == "cerrar_izquierda":
             self.estado_mano_izq = "Cerrada"
         else:
-            self.festado_mano_izq = "Inclinada"
+            self.estado_mano_izq = "Inclinada"
 
         if der_estado == "Sin gesto":
             self.estado_mano_der = "Nada"
