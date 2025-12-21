@@ -69,8 +69,6 @@ class GestureController:
             self.contador_inclinar_manos += 1
 
     def gesture_input(self, frame):
-        if self.game.game_over:
-            return
 
         now = pygame.time.get_ticks()
         if now - self.last_gesture_time < self.GESTURE_COOLDOWN:
@@ -81,6 +79,10 @@ class GestureController:
         self.distancia_ok = gesture.get("distance_ok", False)
 
         self.update_hands_state(gesture)
+
+        if self.game.game_over or self.game.new_game:
+            return
+
         self.update_counters()
         self.update_last_gests()
 
