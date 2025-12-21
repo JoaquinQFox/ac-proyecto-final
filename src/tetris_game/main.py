@@ -66,7 +66,7 @@ gesture_controller = GestureController(game)
 
 # Tiempo en el que demora bajar un bloque automaticamente
 GAME_UPDATE = pygame.USEREVENT + 1
-pygame.time.set_timer(GAME_UPDATE, 2000)
+pygame.time.set_timer(GAME_UPDATE, 3000)
 
 # Tiempo en el que lee cada gesto
 HANDS_UPDATE = pygame.USEREVENT + 2
