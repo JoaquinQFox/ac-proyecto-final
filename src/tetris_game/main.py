@@ -8,8 +8,13 @@ from gesture_controller import GestureController
 if sys.platform == "win32":
     os.environ["SDL_VIDEO_HIGHDPI_DISABLED"] = "1"
 
-SCREEN_WIDTH = 1280
-SCREEN_HEIGHT = 880
+# Tamaño lógico de la ventana
+LOGICAL_WIDTH = 1280
+LOGICAL_HEIGHT = 880
+
+# Tamaño Modificable
+WINDOW_WIDTH = 960
+WINDOW_HEIGHT = 660
 
 pygame.init()
 
@@ -26,7 +31,7 @@ next_surface = title_font.render("Siguiente", True, Colors.white)
 game_over_surface = title_font.render("GAME OVER", True, Colors.white)
 play_game_surface = title_font.render('Apreta "espacio" para jugar', True, Colors.white)
 
-# Se definen rectangulos
+# Se definen rectangulos (Usan LOGICAL_WIDTH/HEIGHT)
 inf_title_rect = pygame.Rect(50, 115, 340, 60)
 inf_title_center_rect = inf_title_surface.get_rect(center=inf_title_rect.center)
 
@@ -41,9 +46,12 @@ next_title_rect = next_surface.get_rect(centerx=next_rect.centerx, y=127)
 game_over_rect = game_over_surface.get_rect(centerx=next_rect.centerx, y=548)
 play_game_rect = play_game_surface.get_rect(centerx=next_rect.centerx, y=600)
 
-# Se crea pantalla de juego
-screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
+# Ventana real (visualiza en el monitor)
+window = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
 pygame.display.set_caption("Tetris")
+
+# Superficie lógica
+screen = pygame.Surface((LOGICAL_WIDTH, LOGICAL_HEIGHT))
 
 # Se inicializa tiempo
 clock = pygame.time.Clock()
@@ -67,6 +75,7 @@ pygame.time.set_timer(HANDS_UPDATE, 100)
 
 # Función de dibujado
 def draw():
+    # Dibujo de todo sobre la superficie lógica
     screen.fill(Colors.dark_blue)
 
     # Título de información de manos
@@ -108,7 +117,8 @@ def draw():
 
     game.draw(screen)
 
-    pygame.display.update()
+    # Quitar el update
+    # pygame.display.update() 
 
 
 while True:
@@ -153,5 +163,15 @@ while True:
                 gesture_controller.gesture_input(frame)
 
     draw()
+
+    # Escalar al tamaño de la ventana
+    # Usamos smoothscale (escalado suave) para que se vea mejor (antialiasing, suavisado), si va lento usa .scale
+    frame_scaled = pygame.transform.smoothscale(screen, (WINDOW_WIDTH, WINDOW_HEIGHT))
+    
+    # Colocar la imagen escalada en la ventana
+    window.blit(frame_scaled, (0, 0))
+    
+    # Actualizar el display
+    pygame.display.update()
 
     clock.tick(60)
