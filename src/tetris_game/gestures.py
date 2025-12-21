@@ -1,3 +1,4 @@
+import math
 import cv2
 import mediapipe as mp
 import joblib
@@ -29,13 +30,31 @@ def read_gesture(frame):
     image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     results = hands.process(image)
 
-    gestures_dict = {"Left": "Sin gesto", "Right": "Sin gesto"}
+    gestures_dict = {
+        "Left": "Sin gesto", 
+        "Right": "Sin gesto", 
+        "distance_ok": False
+    }
 
     if not results.multi_hand_landmarks:
         return gestures_dict
 
+    alguna_mano_en_rango = False
+
     for hand_landmarks, hand_handedness in zip(results.multi_hand_landmarks, results.multi_handedness):
         coords_raw = [(lm.x, lm.y, lm.z) for lm in hand_landmarks.landmark]
+        
+        # Distancia entre la Muñeca (0) y el Nudillo del Medio (9)
+        x0, y0 = coords_raw[0][0], coords_raw[0][1]
+        x9, y9 = coords_raw[9][0], coords_raw[9][1]
+        
+        # Distancia Euclidiana
+        distancia_aparente = math.hypot(x9 - x0, y9 - y0)
+
+        # Rango ajustable
+        if 0.18 < distancia_aparente < 0.28:
+            alguna_mano_en_rango = True
+
         coords_norm = normalizar_landmarks(coords_raw)
         landmarks = [v for p in coords_norm for v in p]
 
@@ -59,5 +78,8 @@ def read_gesture(frame):
             gesture = encoder.inverse_transform([gesture_idx])[0]
         
         gestures_dict[mano_real] = gesture
+    
+    # Guardar resultado de distancia
+    gestures_dict["distance_ok"] = alguna_mano_en_rango
     
     return gestures_dict

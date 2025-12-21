@@ -16,6 +16,7 @@ class GestureController:
         # Estados de las manos actuales
         self.estado_mano_izq = "Nada"
         self.estado_mano_der = "Nada"
+        self.distancia_ok = False 
 
         # Contadores de veces que se cierra y abre manos
         self.contador_cerrar_manos = 0
@@ -76,7 +77,8 @@ class GestureController:
             return
 
         self.last_gesture_time = now
-        gesture = read_gesture(frame)
+        gesture = read_gesture(frame)     
+        self.distancia_ok = gesture.get("distance_ok", False)
 
         self.update_hands_state(gesture)
         self.update_counters()

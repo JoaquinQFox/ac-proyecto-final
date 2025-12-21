@@ -158,10 +158,22 @@ while True:
 
             if ret:
                 flipped = cv2.flip(frame, 1)
+                
+                h_cam, w_cam, _ = flipped.shape
+                color_borde = (0, 0, 255)
+                
+                try:
+                    if gesture_controller.distancia_ok:
+                        color_borde = (0, 255, 0)
+                except:
+                    pass
+                
+                grosor = 10
+                cv2.rectangle(flipped, (0, h_cam - grosor), (w_cam, h_cam), color_borde, -1)
+
                 cv2.imshow("Captura de mano", flipped)
                 cv2.waitKey(1)
                 gesture_controller.gesture_input(frame)
-
     draw()
 
     # Escalar al tamaño de la ventana
